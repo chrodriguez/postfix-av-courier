@@ -53,9 +53,6 @@ Vagrant::Config.run do |config|
     chef.data_bags_path = "../../data_bags"
     chef.roles_path = "../../roles"
     chef.json = {
-      :"apt-proxy" => {
-         "server" => "http://car:lider02@proton.senasa.gov.ar:8080",
-      },
       :mysql => {
         :server_root_password => 'rootpass',
         :server_debian_password => 'debpass',
@@ -64,9 +61,8 @@ Vagrant::Config.run do |config|
     }
 
     chef.run_list = [
-#      "recipe[apt-proxy]",
-      "role[mail_adam]"
-#      "role[mail_directorio]"
+#      "role[mail_adam]"
+      "role[mail_directorio]"
     ]
   end
 end
