@@ -1,0 +1,3 @@
+#Aca podriamos agregar qué IPs co hostnames rechazar, por ejemplo:
+#w.x.y.z		REJECT Ud no es bienvenido
+#linuxsl.hopto.org	REJECT

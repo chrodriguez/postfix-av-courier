@@ -1,0 +1,6 @@
+#Agregar aca los emails de quienes no pueden mandar mail a nuestro dominio
+senasa.gov.ar			OK
+senasa.gob.ar			OK
+prevencionhlb.gov.ar		OK
+susanamendoza@unibank.com	REJECT Mail blocked
+Sebastian.498@live.com		REJECT Mail blocked

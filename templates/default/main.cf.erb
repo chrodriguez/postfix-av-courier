@@ -1,0 +1,114 @@
+###############################################################################
+#General configuration
+###############################################################################
+smtpd_banner = $myhostname ESMTP 
+biff = no
+# appending .domain is the MUA's job.
+append_dot_mydomain = no
+# Uncomment the next line to generate "delayed mail" warnings
+#delay_warning_time = 4h
+readme_directory = no
+alias_maps = hash:/etc/aliases
+alias_database = hash:/etc/aliases
+myorigin = /etc/mailname
+mydestination = <%= (@node.postfix.mydestination.is_a?(Array) && @node.postfix.mydestination.join(", "))  || @node.postfix.mydestination %>
+relayhost = <%= @node.postfix.relayhost %>
+mailbox_size_limit = 0
+recipient_delimiter = +
+inet_interfaces = all
+message_size_limit=<%= @node.postfix.message_size_limit || "15728640" %>
+myhostname = <%= @node.postfix.myhostname %>
+mynetworks = <%= (@node.postfix.mynetworks.is_a?(Array) && @node.postfix.mynetworks.join(" ")) || @node.postfix.mynetworks || "127.0.0.0/8" %>
+
+<% if @node[:postfix][:sasl][:auth_domain] -%>
+###############################################################################
+# SMTP Authentication
+###############################################################################
+broken_sasl_auth_clients = yes
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_local_domain = <%= @node[:postfix][:sasl][:auth_domain] %>
+smtpd_sasl_authenticated_header = yes
+<% end -%>
+
+<% if @ssl_data -%>
+###############################################################################
+# SSL / TLS
+###############################################################################
+smtpd_tls_cert_file= <%= @ssl_data[:cert] %>
+smtpd_tls_key_file= <%= @ssl_data[:key] %>
+smtpd_tls_CAfile = <%= @ssl_data[:ca] %>
+smtpd_use_tls=yes
+smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+smtpd_tls_loglevel = 0
+<% end -%>
+
+###############################################################################
+# LDAP
+###############################################################################
+# virtual domains
+virtual_mailbox_domains = <%= ( @node.postfix.virtual_mailbox_domains.is_a?(Array) && @node.postfix.virtual_mailbox_domains.join(", ") ) || @node.postfix.virtual_mailbox_domains %>
+# User mailboxes
+virtual_mailbox_maps = <%= @virtual_mailbox_maps %>
+# Virtual alias
+virtual_alias_maps = <%= @virtual_alias_maps %>
+<% if @node.postfix.virtual_transport -%>
+# Virtual delivery
+virtual_transport = <%= @node.postfix.virtual_transport %>
+<% end -%>
+
+###############################################################################
+#UCE Restrictions
+###############################################################################
+<% if @node.postfix.policyspf -%>
+spf-policyd_time_limit = 3600s
+<% end -%>
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+strict_rfc821_envelopes = yes
+smtpd_reject_unlisted_sender = yes
+
+smtpd_client_restrictions =
+        check_client_access hash:/etc/postfix/tables/client_access
+        # This file can include IP / hostname rejections
+
+smtpd_helo_restrictions =
+        reject_invalid_helo_hostname
+
+smtpd_sender_restrictions =
+        reject_non_fqdn_sender
+        reject_unknown_sender_domain
+        permit_mynetworks
+        check_sender_access hash:/etc/postfix/tables/sender_access 
+        # This file can include domain/mail address and ip to be rejected or accepted
+        check_sender_mx_access cidr:/etc/postfix/tables/bogus_mx
+        # Check invalid MX values
+        reject_authenticated_sender_login_mismatch
+        # Only authenticated senders whose name matches from address are allowed
+
+smtpd_data_restrictions =
+        reject_multi_recipient_bounce
+        # Reject mail from <> to multiple recipients
+
+<% if @node.postfix.policyd -%>
+smtpd_end_of_data_restrictions=
+        check_policy_service <%= @node.postfix.policyd %>
+<% end -%>
+
+smtpd_recipient_restrictions =
+        check_recipient_access hash:/etc/postfix/tables/recipient_access
+        # Recipients to be accepted or rejected
+        reject_non_fqdn_recipient
+        reject_unknown_recipient_domain
+        permit_mynetworks
+        <% if @node.postfix.policyd -%>
+        check_policy_service <%= @node.postfix.policyd %>
+        <% end -%>
+        permit_sasl_authenticated
+        reject_unauth_destination
+        <% if @node.postfix.policyspf -%>
+        check_policy_service <%= @node.postfix.policyspf %>
+        <% end -%>
+        <% if @node.postfix.policypostgrey -%>
+        check_policy_service <%= @node.postfix.policypostgrey %>
+        <% end -%>

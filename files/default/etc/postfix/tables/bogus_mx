@@ -1,0 +1,6 @@
+0.0.0.0/8	550 Mail server in broadcast network
+10.0.0.0/8	550 No route to your 10.0.0.0/8 network
+127.0.0.0/8	550 No route to your loopback network
+240.0.0.0/4	550 Mail server in class D network
+192.168.0.0/16	550 No route to your 192.168.0.0/16 network
+172.16.0.0/12 	550 No route to your 172.16.0.0/12 network

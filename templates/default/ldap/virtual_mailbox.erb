@@ -1,0 +1,14 @@
+server_host = <%- @ldap_host.each do |host| -%>
+  <%= host -%>
+<%- end -%>
+
+bind = <%= @ldap_auth.empty? ? "no": "yes"%>
+<%- unless @ldap_auth.empty? -%>
+bind_dn=<%= @ldap_auth['user'] %>
+bind_pw=<%= @ldap_auth['password'] %>
+<%- end -%>
+version=3
+search_base = <%= @ldap_base %>
+query_filter = <%= @ldap_query %>
+result_format= <%= @result_format %> 
+result_attribute= <%= @result_attribute %>
