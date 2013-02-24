@@ -18,10 +18,10 @@ See `attributes/default.rb` to understand
 
 ## TODO
 
-Implement:
+**Implement:*a*
 * SSL support
 * Policyd recipe
 * Encrypted databags
 
 ## Author
-*Author:* Christian A. Rodriguez (<chrodriguez@gmail.com>)
+**Author:** Christian A. Rodriguez (<chrodriguez@gmail.com>)
