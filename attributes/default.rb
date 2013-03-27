@@ -22,19 +22,19 @@ default[:postfix][:ldap][:host] = %w(ldap://server1.midominio ldap://server2.mid
 default[:postfix][:libpam][:smtp] = "/etc/pam.d/smtp"
 default[:postfix][:libpam][:conf] = "/etc/ldap.conf"
 default[:postfix][:libpam][:secret] = "/etc/ldap.secret"
-default[:postfix][:libpam][:base] = "ou=users,o=origanization"
+default[:postfix][:libpam][:base] = "ou=users,o=organization"
 default[:postfix][:libpam][:login_attribute] = "uid"
 
 # Postfix configuration
 default[:postfix][:myorigin] = 'midominio.com'
 default[:postfix][:virtual_mailbox_domains] = %w(midominio.com miotrodominio.com)
 default[:postfix][:virtual_mailbox_maps][:ldap][:config] = "/etc/postfix/ldap/ldap-mailboxes.cfg"
-default[:postfix][:virtual_mailbox_maps][:ldap][:search_base] = "ou=users,o=origanization"
+default[:postfix][:virtual_mailbox_maps][:ldap][:search_base] = "ou=users,o=organization"
 default[:postfix][:virtual_mailbox_maps][:ldap][:query_filter] = "(&(&(uid=%u)(mail=%u@midominio.com))(!(nsaccountlock=true)))"
 default[:postfix][:virtual_mailbox_maps][:ldap][:result_format] = "%d/%u/Maildir/",
 default[:postfix][:virtual_mailbox_maps][:ldap][:result_attribute] = "mail"
 default[:postfix][:virtual_alias_maps][:ldap][:config] = "/etc/postfix/ldap/ldap-alias.cfg"
-default[:postfix][:virtual_alias_maps][:ldap][:search_base] = "ou=aliases,ou=mail,o=origanization"
+default[:postfix][:virtual_alias_maps][:ldap][:search_base] = "ou=aliases,ou=mail,o=organization"
 default[:postfix][:virtual_alias_maps][:ldap][:query_filter] = "(mail=%u@midominio.com)"
 default[:postfix][:virtual_alias_maps][:ldap][:result_attribute] = "mail"
 default[:postfix][:virtual_alias_maps][:ldap][:special_result_filter] = "%s@%d"
