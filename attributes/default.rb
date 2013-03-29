@@ -9,11 +9,17 @@ default[:postfix][:aliases] = {
 }
 
 # ldap secrets databag
+default[:postfix][:ldap][:auth_databag_encrypted] = true
 default[:postfix][:ldap][:auth_databag] = "secrets"
 default[:postfix][:ldap][:auth_databag_item] = "ldap_auth"
 
 # SSL cetrtificates to configure SSL
-default[:postfix][:ssl_databag] = "certificate"
+default[:postfix][:ssl][:databag] = "certificate"
+default[:postfix][:ssl][:databag_item] = nil
+default[:postfix][:ssl][:cert_path] = "/etc/postfix/ssl"
+default[:postfix][:ssl][:cert_file] = "cert.crt"
+default[:postfix][:ssl][:key_file] = "cert.key"
+default[:postfix][:ssl][:chain_file] = "chain.crt"
 
 # ldap hosts
 default[:postfix][:ldap][:host] = %w(ldap://server1.midominio ldap://server2.midominio.com)

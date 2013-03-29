@@ -135,17 +135,20 @@ template "/etc/postfix/master.cf" do
   owner "root"
   group "root"
   mode "0644"
+  variables(
+    :use_ssl => !ssl_databag.empty?
+  )
 end
 
 # Postfix main configuration
-virtual_mailbox_maps
 template "/etc/postfix/main.cf" do
   source "main.cf.erb"
   owner "root"
   group "root"
   variables(
     :virtual_mailbox_maps => virtual_mailbox_maps,
-    :virtual_alias_maps => virtual_alias_maps
+    :virtual_alias_maps => virtual_alias_maps,
+    :use_ssl => !ssl_databag.empty?
   )
   mode "0644"
 end

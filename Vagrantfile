@@ -1,3 +1,4 @@
+#Berkshelf integration
 require 'berkshelf/vagrant'
 
 Vagrant::Config.run do |config|
@@ -18,7 +19,7 @@ Vagrant::Config.run do |config|
 
   config.vm.host_name = "senasamail.senasa.gob.ar"
 
-  config.vm.box = "precise-32"
+  config.vm.box = "ubuntu-12.04-chef-11.4.0"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
 
   # Boot with a GUI so you can see the screen. (Default is headless)
@@ -52,6 +53,7 @@ Vagrant::Config.run do |config|
 #    chef.log_level = :debug
     chef.data_bags_path = "../../data_bags"
     chef.roles_path = "../../roles"
+    chef.encrypted_data_bag_secret_key_path = "../../.chef/databags.key"
     chef.json = {
       :mysql => {
         :server_root_password => 'rootpass',
@@ -61,6 +63,7 @@ Vagrant::Config.run do |config|
     }
 
     chef.run_list = [
+      "apt",
 #      "role[mail_adam]"
       "role[mail_directorio]"
     ]

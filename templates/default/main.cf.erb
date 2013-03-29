@@ -30,13 +30,13 @@ smtpd_sasl_local_domain = <%= @node[:postfix][:sasl][:auth_domain] %>
 smtpd_sasl_authenticated_header = yes
 <% end -%>
 
-<% if @ssl_data -%>
+<% if @use_ssl -%>
 ###############################################################################
 # SSL / TLS
 ###############################################################################
-smtpd_tls_cert_file= <%= @ssl_data[:cert] %>
-smtpd_tls_key_file= <%= @ssl_data[:key] %>
-smtpd_tls_CAfile = <%= @ssl_data[:ca] %>
+smtpd_tls_cert_file= <%= "#{@node[:postfix][:ssl][:cert_path]}/certs/#{@node[:postfix][:ssl][:cert_file]}" %>
+smtpd_tls_key_file= <%= "#{@node[:postfix][:ssl][:cert_path]}/private/#{@node[:postfix][:ssl][:key_file]}" %>
+smtpd_tls_CAfile = <%= "#{@node[:postfix][:ssl][:cert_path]}/certs/#{@node[:postfix][:ssl][:chain_file]}" %>
 smtpd_use_tls=yes
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
@@ -49,9 +49,9 @@ smtpd_tls_loglevel = 0
 # virtual domains
 virtual_mailbox_domains = <%= ( @node.postfix.virtual_mailbox_domains.is_a?(Array) && @node.postfix.virtual_mailbox_domains.join(", ") ) || @node.postfix.virtual_mailbox_domains %>
 # User mailboxes
-virtual_mailbox_maps = <%= @virtual_mailbox_maps %>
+virtual_mailbox_maps = <%= @virtual_mailbox_maps.join(",") %>
 # Virtual alias
-virtual_alias_maps = <%= @virtual_alias_maps %>
+virtual_alias_maps = <%= @virtual_alias_maps.join(",") %>
 <% if @node.postfix.virtual_transport -%>
 # Virtual delivery
 virtual_transport = <%= @node.postfix.virtual_transport %>
