@@ -7,7 +7,11 @@ def ldap_auth
 end
 
 def ssl_databag
-  Chef::EncryptedDataBagItem.load(node.postfix.ssl.databag, node.postfix.ssl.databag_item).to_hash
+  if node.postfix.ssl.enabled
+    Chef::EncryptedDataBagItem.load(node.postfix.ssl.databag, node.postfix.ssl.databag_item).to_hash 
+  else
+    {}
+  end
 end
 
 def ldap_host

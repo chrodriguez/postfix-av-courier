@@ -167,4 +167,4 @@ execute "aliases" do
 end
 
 # Use SASL authentication
-include_recipe "postfix::sasl" if node[:postfix][:sasl]
+include_recipe "postfix::sasl" if node[:postfix][:sasl][:enabled]

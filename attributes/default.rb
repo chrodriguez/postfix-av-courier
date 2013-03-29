@@ -14,12 +14,19 @@ default[:postfix][:ldap][:auth_databag] = "secrets"
 default[:postfix][:ldap][:auth_databag_item] = "ldap_auth"
 
 # SSL cetrtificates to configure SSL
+default[:postfix][:ssl][:enabled] = false
 default[:postfix][:ssl][:databag] = "certificate"
 default[:postfix][:ssl][:databag_item] = nil
 default[:postfix][:ssl][:cert_path] = "/etc/postfix/ssl"
 default[:postfix][:ssl][:cert_file] = "cert.crt"
 default[:postfix][:ssl][:key_file] = "cert.key"
 default[:postfix][:ssl][:chain_file] = "chain.crt"
+
+# Amavis
+default[:postfix][:amavis][:enabled] = false
+default[:postfix][:amavis][:host] = "127.0.0.1"
+default[:postfix][:amavis][:feed] = "amavisfeed"
+default[:postfix][:amavis][:port] = "10024"
 
 # ldap hosts
 default[:postfix][:ldap][:host] = %w(ldap://server1.midominio ldap://server2.midominio.com)
@@ -54,6 +61,7 @@ default[:postfix][:mynetworks] = "127.0.0.0/8"
 default[:postfix][:virtual_transport] = "smtp:[amavis.otroserver.com]"
 
 #SASL authentication options
+default[:postfix][:sasl][:enabled] = false
 default[:postfix][:sasl][:conf] = "/etc/postfix/sasl/smtpd.conf"
 default[:postfix][:sasl][:group] = "sasl"
 default[:postfix][:sasl][:auth_domain] = "midominio.com"
