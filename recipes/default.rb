@@ -148,7 +148,8 @@ template "/etc/postfix/main.cf" do
   variables(
     :virtual_mailbox_maps => virtual_mailbox_maps,
     :virtual_alias_maps => virtual_alias_maps,
-    :use_ssl => !ssl_databag.empty?
+    :use_ssl => !ssl_databag.empty?,
+    :use_amavis => node[:postfix][:amavis][:enabled]
   )
   mode "0644"
 end

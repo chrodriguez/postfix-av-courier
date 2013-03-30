@@ -20,7 +20,7 @@ message_size_limit=<%= @node.postfix.message_size_limit || "15728640" %>
 myhostname = <%= @node.postfix.myhostname %>
 mynetworks = <%= (@node.postfix.mynetworks.is_a?(Array) && @node.postfix.mynetworks.join(" ")) || @node.postfix.mynetworks || "127.0.0.0/8" %>
 
-<% if @node[:postfix][:sasl][:auth_domain] -%>
+<% if @node[:postfix][:sasl][:enabled] -%>
 ###############################################################################
 # SMTP Authentication
 ###############################################################################
@@ -113,7 +113,9 @@ smtpd_recipient_restrictions =
         <% if @node.postfix.policyd -%>
         check_policy_service <%= @node.postfix.policyd %>
         <% end -%>
+        <% if @node[:postfix][:sasl][:enabled] -%>
         permit_sasl_authenticated
+        <% end -%>
         reject_unauth_destination
         <% if @node.postfix.policyspf -%>
         check_policy_service <%= @node.postfix.policyspf %>
