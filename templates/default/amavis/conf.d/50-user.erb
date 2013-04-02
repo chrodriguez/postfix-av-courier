@@ -1,0 +1,44 @@
+use strict;
+
+#
+# Place your configuration directives here.  They will override those in
+# earlier files.
+#
+# See /usr/share/doc/amavisd-new/ for documentation and examples of
+# the directives you can use in this file
+#
+
+$X_HEADER_LINE = "<%=@node.postfix.amavis.x_header_line %>";
+
+
+@local_domains_acl = ( <%= @node.postfix.virtual_mailbox_domains.map { |x| "\"#{x}\""}.join(",") %>);
+
+<% if @node.postfix.amavis.av.enabled -%> 
+@bypass_virus_checks_maps = (
+  \%bypass_virus_checks, \@bypass_virus_checks_acl, \$bypass_virus_checks_re);
+<% end %>
+<% if @node.postfix.amavis.spam.enabled  -%>
+@bypass_spam_checks_maps = (
+  \%bypass_spam_checks, \@bypass_spam_checks_acl, \$bypass_spam_checks_re);
+<% end %>
+
+$syslog_priority = '<%= @node.postfix.amavis.syslog_priority %>';  # switch to info to drop debug output, etc
+$sa_spam_subject_tag = '<%= @node.postfix.amavis.spam.subject_tag%>';
+
+$sa_tag_level_deflt  = <%= @node.postfix.amavis.spam.tag_level %>;
+$sa_tag2_level_deflt = <%= @node.postfix.amavis.spam.tag2_level %>;
+$sa_kill_level_deflt = <%= @node.postfix.amavis.spam.kill_level %>;
+$sa_dsn_cutoff_level = <%= @node.postfix.amavis.spam.dsn_cutoff_level %>;
+
+$final_virus_destiny      = <%= @node.postfix.amavis.final_virus_destiny %>;
+$final_banned_destiny     = <%= @node.postfix.amavis.final_banned_destiny %>;
+$final_spam_destiny       = <%= @node.postfix.amavis.final_spam_destiny %>;
+$final_bad_header_destiny = <%= @node.postfix.amavis.final_bad_header_destiny %>;
+
+$virus_admin = "<%= @node.postfix.amavis.virus_admin.gsub('@','\\@') %>";
+
+$max_servers = <%= @node.postfix.amavis.max_servers %>;
+
+
+#------------ Do not modify anything below this line -------------
+1;  # ensure a defined return

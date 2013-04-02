@@ -136,7 +136,8 @@ template "/etc/postfix/master.cf" do
   group "root"
   mode "0644"
   variables(
-    :use_ssl => !ssl_databag.empty?
+    :use_ssl => !ssl_databag.empty?,
+    :use_amavis => node[:postfix][:amavis][:enabled]
   )
 end
 

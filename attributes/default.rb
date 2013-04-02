@@ -22,12 +22,6 @@ default[:postfix][:ssl][:cert_file] = "cert.crt"
 default[:postfix][:ssl][:key_file] = "cert.key"
 default[:postfix][:ssl][:chain_file] = "chain.crt"
 
-# Amavis
-default[:postfix][:amavis][:enabled] = false
-default[:postfix][:amavis][:host] = "127.0.0.1"
-default[:postfix][:amavis][:feed] = "amavisfeed"
-default[:postfix][:amavis][:port] = "10024"
-
 # ldap hosts
 default[:postfix][:ldap][:host] = %w(ldap://server1.midominio ldap://server2.midominio.com)
 
@@ -60,7 +54,7 @@ default[:postfix][:message_size_limit] = "15728640"
 default[:postfix][:mynetworks] = "127.0.0.0/8"
 default[:postfix][:virtual_transport] = "smtp:[amavis.otroserver.com]"
 
-#SASL authentication options
+# SASL authentication options
 default[:postfix][:sasl][:enabled] = false
 default[:postfix][:sasl][:conf] = "/etc/postfix/sasl/smtpd.conf"
 default[:postfix][:sasl][:group] = "sasl"
@@ -71,5 +65,34 @@ default[:postfix][:policyd] = "inet:127.0.0.1:10031"
 default[:postfix][:policyspf] = nil
 default[:postfix][:policypostgrey] = "inet:127.0.0.1:10023"
 
-#is postfix run chrooted
+# is postfix run chrooted
 default[:postfix][:chrooted] = true
+
+# Amavis
+#############################################
+default[:postfix][:amavis][:enabled] = false
+default[:postfix][:amavis][:host] = "127.0.0.1"
+default[:postfix][:amavis][:feed] = "amavisfeed"
+default[:postfix][:amavis][:port] = "10024"
+default[:postfix][:amavis][:max_servers] = "10"
+default[:postfix][:amavis][:syslog_priority] = "info"
+default[:postfix][:amavis][:x_header_line] = "$myproduct_name at $mydomain"
+default[:postfix][:amavis][:virus_admin] = "postmaster@example.domain"
+# Enable antivirus?
+default[:postfix][:amavis][:av][:enabled] = true
+# Enable antispam?
+default[:postfix][:amavis][:spam][:enabled] = true
+default[:postfix][:amavis][:spam][:subject_tag] = "***SPAM***"
+default[:postfix][:amavis][:spam][:tag_level] = "-999"
+default[:postfix][:amavis][:spam][:tag2_level] = "6.31"
+default[:postfix][:amavis][:spam][:kill_level] = "6.31"
+default[:postfix][:amavis][:spam][:dsn_cutoff_level] = "10"
+# Actions taken when:
+default[:postfix][:amavis][:final_virus_destiny] = "D_DISCARD"
+default[:postfix][:amavis][:final_banned_destiny] = "D_DISCARD"
+default[:postfix][:amavis][:final_spam_destiny] = "D_DISCARD"
+default[:postfix][:amavis][:final_bad_header_destiny] = "D_PASS"
+
+# clamav
+default["clamav"]["freshclam"]["enabled"] = true
+default["clamav"]["clamd"]["enabled"] = true
