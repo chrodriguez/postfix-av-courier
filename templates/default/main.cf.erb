@@ -92,7 +92,9 @@ smtpd_sender_restrictions =
         # This file can include domain/mail address and ip to be rejected or accepted
         check_sender_mx_access cidr:/etc/postfix/tables/bogus_mx
         # Check invalid MX values
+        <% if @node[:postfix][:sasl][:enabled] -%>
         reject_authenticated_sender_login_mismatch
+        <% end -%>
         # Only authenticated senders whose name matches from address are allowed
 
 smtpd_data_restrictions =

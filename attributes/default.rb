@@ -71,6 +71,8 @@ default[:postfix][:chrooted] = true
 # Amavis
 #############################################
 default[:postfix][:amavis][:enabled] = false
+default[:postfix][:amavis][:user] = "amavis"
+default[:postfix][:amavis][:group] = "amavis"
 default[:postfix][:amavis][:host] = "127.0.0.1"
 default[:postfix][:amavis][:feed] = "amavisfeed"
 default[:postfix][:amavis][:port] = "10024"
@@ -92,7 +94,17 @@ default[:postfix][:amavis][:final_virus_destiny] = "D_DISCARD"
 default[:postfix][:amavis][:final_banned_destiny] = "D_DISCARD"
 default[:postfix][:amavis][:final_spam_destiny] = "D_DISCARD"
 default[:postfix][:amavis][:final_bad_header_destiny] = "D_PASS"
+# Spamassassin amavis training
+default[:postfix][:sa_train][:mailboxes_base] = "/home"
+default[:postfix][:sa_train][:spam_imap_folder] = ""
+default[:postfix][:sa_train][:jam_imap_folder] = ""
+default[:postfix][:sa_train][:remote_fs][:enabled] = false
+default[:postfix][:sa_train][:remote_fs][:user] = "vmail"
+default[:postfix][:sa_train][:remote_fs][:host] = "remote.server.example"
+default[:postfix][:sa_train][:remote_fs][:path] = "/home"
+
 
 # clamav
-default["clamav"]["freshclam"]["enabled"] = true
-default["clamav"]["clamd"]["enabled"] = true
+set[:clamav][:freshclam][:enabled] = true
+set[:clamav][:clamd][:enabled] = true
+set[:clamav][:clamd][:local_socket] = "/var/run/clamav/clamd.ctl"

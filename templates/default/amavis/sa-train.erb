@@ -1,0 +1,37 @@
+#!/bin/bash
+
+SPAM_BASE_DIR=<%= @mailboxes_base %>
+SPAM_IMAP_FOLDER="<%= @spam_learn_imap_folder %>"
+JAM_IMAP_FOLDER="<%= @jam_learn_imap_folder %>"
+SPAM=$SPAM_BASE_DIR/Maildir/$SPAM_IMAP_FOLDER/cur
+NOSPAM=$SPAM_BASE_DIR/Maildir/$JAM_IMAP_FOLDER/cur
+TMP_SPAM=/tmp/spam
+TMP_NOSPAM=/tmp/nospam
+TMP_OUTPUT=/tmp/sa-train.out
+<% if @remote_fs -%>
+sshfs <%= @remote_fs_user%>@<%= @remote_fs_host%>:<%= @remote_fs_path%> $SPAM_BASE_DIR
+  if mount | grep -q '<%= @remote_fs_host %>' ; then
+<% end -%>
+  if [ ! -d $TMP_SPAM ]; then
+    mkdir $TMP_SPAM
+  fi
+  if [ ! -d $TMP_NOSPAM ]; then
+    mkdir $TMP_NOSPAM
+  fi
+  mv $SPAM/* $TMP_SPAM 2> /dev/null
+  mv $NOSPAM/* $TMP_NOSPAM 2> /dev/null
+<% if @remote_fs -%>
+  umount $SPAM_BASE_DIR
+<% end -%>
+  chown -R <%= "#{@node['postfix']['amavis']['user']}:#{@node['postfix']['amavis']['group']}" %> $TMP_SPAM $TMP_NOSPAM
+  su <%= @node['postfix']['amavis']['user'] %> -c "/usr/bin/sa-learn --spam $TMP_SPAM/*" > $TMP_OUTPUT
+  su <%= @node['postfix']['amavis']['user'] %> -c "/usr/bin/sa-learn --ham $TMP_NOSPAM/*">> $TMP_OUTPUT
+  if grep -q '[1-9] message' $TMP_OUTPUT ; then
+    cat $TMP_OUTPUT
+  fi
+  rm $TMP_SPAM/* $TMP_NOSPAM/* 2> /dev/null
+  rm $TMP_OUTPUT
+<% if @remote_fs -%>
+fi
+<% end -%>
+
