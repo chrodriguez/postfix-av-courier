@@ -59,8 +59,8 @@ Vagrant::Config.run do |config|
 
     chef.run_list = [
       "apt",
-#      "role[mail_adam]"
-      "role[mail_av_directorio]"
+      "role[mail_av_adam]"
+#      "role[mail_av_directorio]"
     ]
   end
 end
