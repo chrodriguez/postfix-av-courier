@@ -173,3 +173,6 @@ include_recipe "postfix::sasl" if node[:postfix][:sasl][:enabled]
 #
 # Amavis integration
 include_recipe "postfix::amavis" if node[:postfix][:amavis][:enabled]
+
+# Courier integration via maildrop
+include_recipe "postfix::courier" if node[:postfix][:courier][:enabled]

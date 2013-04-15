@@ -108,3 +108,41 @@ default[:postfix][:sa_train][:remote_fs][:path] = "/home"
 set[:clamav][:freshclam][:enabled] = true
 set[:clamav][:clamd][:enabled] = true
 set[:clamav][:clamd][:local_socket] = "/var/run/clamav/clamd.ctl"
+
+
+# Courier 
+default[:postfix][:courier][:enabled] = false
+
+default[:postfix][:courier][:authdaemon][:module] = "authpam"
+
+default[:postfix][:courier][:ldap][:auth_databag_encrypted] = true
+default[:postfix][:courier][:ldap][:auth_databag] = "secrets"
+default[:postfix][:courier][:ldap][:auth_databag_item] = "ldap_auth"
+default[:postfix][:courier][:ldap][:host] = %w(ldap://server1.midominio ldap://server2.midominio.com)
+default[:postfix][:courier][:ldap][:base] = "ou=users,o=organization"
+default[:postfix][:courier][:ldap][:bind] = true
+default[:postfix][:courier][:ldap][:mail] = "mail"
+default[:postfix][:courier][:ldap][:filter] = false
+default[:postfix][:courier][:ldap][:domain] = false
+
+# LDAP_GLOB_UID & LDAP_GLOB_GID came from the following parameters shared with postfix
+default[:postfix][:virtual_user][:enabled] = true
+default[:postfix][:virtual_user][:username] = "vmail"
+default[:postfix][:virtual_user][:uid] = "5000"
+default[:postfix][:virtual_user][:groupname] = "vmail"
+default[:postfix][:virtual_user][:gid] = "5000"
+default[:postfix][:virtual_user][:home] = "/export/home/"
+default[:postfix][:virtual_user][:shell] = "/bin/sh"
+
+default[:postfix][:courier][:ldap][:homedir] = "homeDirectory"
+default[:postfix][:courier][:ldap][:mailroot] = "/export/home"
+default[:postfix][:courier][:ldap][:maildirquota] = "mailquota"
+default[:postfix][:courier][:ldap][:fullname] = "cn"
+
+# if virtual_user is disabled, you must set uid and gid attributes
+default[:postfix][:courier][:ldap][:uidNumber] = "uidNumber"
+default[:postfix][:courier][:ldap][:gidNumber] = "uidNumber"
+
+default[:postfix][:courier][:ldap][:tls] = false
+
+
