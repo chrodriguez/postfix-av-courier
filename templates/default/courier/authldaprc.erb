@@ -28,7 +28,7 @@
 # you can list them separated by commas and spaces, and they will be tried in
 # turn.
 
-LDAP_URI		ldaps://ldap.example.com, ldaps://backup.example.com
+LDAP_URI <%= node.postfix.courier.ldap.host.join(" ")%>
 
 ##NAME: LDAP_PROTOCOL_VERSION:0
 #
@@ -40,15 +40,15 @@ LDAP_PROTOCOL_VERSION	3
 #
 # Look for authentication here:
 
-LDAP_BASEDN		o=example, c=com
+LDAP_BASEDN		<%= node.postfix.courier.ldap.base %>
 
 ##NAME: LDAP_BINDDN:0
 #
 # You may or may not need to specify the following.  Because you've got
 # a password here, authldaprc should not be world-readable!!!
 
-LDAP_BINDDN		cn=administrator, o=example, c=com
-LDAP_BINDPW		toto
+LDAP_BINDDN		<%= @ldap_auth['user'] %>
+LDAP_BINDPW		<%= @ldap_auth['password'] %>
 
 ##NAME: LDAP_TIMEOUT:0
 #
@@ -65,13 +65,13 @@ LDAP_TIMEOUT		5
 # Additionally, if LDAP_AUTHBIND is 1 then password changes are done under
 # the credentials of the user themselves, not LDAP_BINDDN/BINDPW
 #
-# LDAP_AUTHBIND		1
+LDAP_AUTHBIND		<%= node.postfix.courier.ldap.bind ? 1:0 %>
 
 ##NAME: LDAP_MAIL:0
 #
 # Here's the field on which we query
 
-LDAP_MAIL		mail
+LDAP_MAIL		<%= node.postfix.courier.ldap.mail %>
 
 ##NAME: LDAP_FILTER:0
 #
@@ -81,12 +81,18 @@ LDAP_MAIL		mail
 # will be "(&(objectClass=CourierMailAccount)(mail=<someAccount>))"
 #
 # LDAP_FILTER           (objectClass=CourierMailAccount)
+<% if node.postfix.courier.ldap.filter %>
+LDAP_FILTER   <%= node.postfix.courier.ldap.filter %>
+<% end %>
 
 ##NAME: LDAP_DOMAIN:0
 #
 # The following default domain will be appended, if not explicitly specified. 
 #
 # LDAP_DOMAIN		example.com
+<% if node.postfix.courier.ldap.domain %>
+LDAP_DOMAIN   <%= node.postfix.courier.ldap.domain %>
+<% end %>
 
 ##NAME: LDAP_GLOB_IDS:0
 #
@@ -96,6 +102,10 @@ LDAP_MAIL		mail
 #
 # LDAP_GLOB_UID		vmail
 # LDAP_GLOB_GID		vmail
+<% if node.postfix.virtual_user.enabled %>
+LDAP_GLOB_UID <%= node.postfix.virtual_user.username %>
+LDAP_GLOB_GID <%= node.postfix.virtual_user.groupname %>
+<% end %>
 
 ##NAME: LDAP_HOMEDIR:0
 #
@@ -103,7 +113,7 @@ LDAP_MAIL		mail
 #
 # The HOMEDIR attribute MUST exist, and we MUST be able to chdir to it
 
-LDAP_HOMEDIR		homeDirectory
+LDAP_HOMEDIR		<%= node.postfix.courier.ldap.homedir %>
 
 ##NAME: LDAP_MAILROOT:0
 #
@@ -111,14 +121,15 @@ LDAP_HOMEDIR		homeDirectory
 # relative paths in LDAP_MAILROOT
 #
 #  LDAP_MAILROOT        /var/mail
+LDAP_MAILROOT <%= node.postfix.courier.ldap.mailroot %>
 
 
 ##NAME: LDAP_MAILDIR:0
 #
 # The MAILDIR attribute is OPTIONAL, and specifies the location of the
 # mail directory.  If not specified, ./Maildir will be used
-
-LDAP_MAILDIR		mailbox
+#
+# LDAP_MAILDIR		mailbox
 
 ##NAME: LDAP_DEFAULTDELIVERY:0
 #
@@ -134,13 +145,14 @@ LDAP_DEFAULTDELIVERY	defaultDelivery
 # maildir quota, see README.maildirquota for more information
 #
 # LDAP_MAILDIRQUOTA	quota
+LDAP_MAILDIRQUOTA	<%= node.postfix.courier.ldap.maildirquota %>
 
 
 ##NAME: LDAP_FULLNAME:0
 #
 # FULLNAME is optional, specifies the user's full name
 
-LDAP_FULLNAME		cn
+LDAP_FULLNAME		<%= node.postfix.courier.ldap.fullname %>
 
 ##NAME: LDAP_PW:0
 #
@@ -161,6 +173,10 @@ LDAP_CRYPTPW		userPassword
 #
 # LDAP_UID		uidNumber
 # LDAP_GID		gidNumber
+<% unless node.postfix.virtual_user.enabled %>
+LDAP_UID		<%= node.postfix.courier.ldap.uidNumber %>
+LDAP_GID		<%= node.postfix.courier.ldap.gidNumber %>
+<% end %>
 
 
 ##NAME: LDAP_AUXOPTIONS:0
@@ -218,7 +234,7 @@ LDAP_DEREF		never
 #
 # For additional LDAP-related options, see the authdaemonrc config file.
 
-LDAP_TLS		0
+LDAP_TLS		<%=  node.postfix.courier.ldap.tls ? 1:0 %>
 
 ##NAME: LDAP_EMAILMAP:0
 #

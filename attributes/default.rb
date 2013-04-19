@@ -115,9 +115,6 @@ default[:postfix][:courier][:enabled] = false
 
 default[:postfix][:courier][:authdaemon][:module] = "authpam"
 
-default[:postfix][:courier][:ldap][:auth_databag_encrypted] = true
-default[:postfix][:courier][:ldap][:auth_databag] = "secrets"
-default[:postfix][:courier][:ldap][:auth_databag_item] = "ldap_auth"
 default[:postfix][:courier][:ldap][:host] = %w(ldap://server1.midominio ldap://server2.midominio.com)
 default[:postfix][:courier][:ldap][:base] = "ou=users,o=organization"
 default[:postfix][:courier][:ldap][:bind] = true
@@ -145,4 +142,24 @@ default[:postfix][:courier][:ldap][:gidNumber] = "uidNumber"
 
 default[:postfix][:courier][:ldap][:tls] = false
 
+# IMAPD
+default[:postfix][:courier][:imapd][:maxdaemons] = 40
+default[:postfix][:courier][:imapd][:maxperip] = 20
+#
+# POP3
+default[:postfix][:courier][:pop3d][:maxdaemons] = 40
+default[:postfix][:courier][:pop3d][:maxperip] = 20
+
+# SSL COURIER
+default[:postfix][:courier][:ssl][:databag] = "certificate"
+default[:postfix][:courier][:ssl][:databag_item] = nil
+default[:postfix][:courier][:ssl][:cert_path] = "/etc/courier/ssl"
+default[:postfix][:courier][:ssl][:cert_file] = "cert.crt"
+default[:postfix][:courier][:ssl][:key_file] = "cert.key"
+default[:postfix][:courier][:ssl][:chain_file] = "chain.crt"
+
+# Maildrop integration
+default[:postfix][:maildrop_mastercf_flags] = "DRhu"
+default[:postfix][:maildrop_binary] = "/usr/bin/maildrop -d ${recipient}"
+default[:postfix][:maildrop_destination_recipient_limit] = false
 

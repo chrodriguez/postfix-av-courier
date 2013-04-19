@@ -65,6 +65,9 @@ virtual_alias_maps = <%= @virtual_alias_maps.join(",") %>
 # Virtual delivery
 virtual_transport = <%= @node.postfix.virtual_transport %>
 <% end -%>
+<% if @node.postfix.maildrop_destination_recipient_limit -%>
+maildrop_destination_recipient_limit = <%= @node.postfix.maildrop_destination_recipient_limit %>
+<% end -%>
 
 ###############################################################################
 #UCE Restrictions

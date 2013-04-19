@@ -42,10 +42,81 @@ service "courier-imap-ssl"
 service "courier-pop" 
 service "courier-pop-ssl" 
 
+certificate_manage node[:postfix][:ssl][:databag_item] do
+  cert_path node[:postfix][:courier][:ssl][:cert_path]
+  cert_file node[:postfix][:courier][:ssl][:cert_file]
+  key_file node[:postfix][:courier][:ssl][:key_file]
+  chain_file node[:postfix][:courier][:ssl][:chain_file]
+end
+
 template "/etc/courier/authdaemonrc" do
   source "courier/authdaemonrc.erb"
   owner "daemon"
   group "daemon"
   mode "0660"
   notifies :restart, "service[courier-authdaemon]"
+end
+
+template "/etc/courier/authldaprc" do
+  source "courier/authldaprc.erb"
+  owner "daemon"
+  group "daemon"
+  mode "0660"
+  variables(
+    :ldap_auth => ldap_auth
+  )
+  notifies :restart, "service[courier-authdaemon]"
+end
+
+template "/etc/courier/imapd" do
+  source "courier/imapd.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, "service[courier-imap]"
+end
+
+template "/etc/courier/imapd-ssl" do
+  source "courier/imapd-ssl.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, "service[courier-imap-ssl]"
+end
+
+template "/etc/courier/pop3d" do
+  source "courier/pop3d.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, "service[courier-pop]"
+end
+
+template "/etc/courier/pop3d-ssl" do
+  source "courier/pop3d-ssl.erb"
+  owner "root"
+  group "root"
+  mode "0644"
+  notifies :restart, "service[courier-pop-ssl]"
+end
+
+cookbook_file "/etc/courier/maildroprc" do
+  source "/etc/courier/maildroprc"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+cookbook_file "/etc/courier/quotawarnmsg" do
+  source "/etc/courier/quotawarnmsg"
+  owner "root"
+  group "root"
+  mode "0644"
+end
+
+cookbook_file "/usr/local/bin/maildrop-wrapper" do
+  source "/usr/local/bin/maildrop-wrapper"
+  owner "root"
+  group "root"
+  mode "0755"
 end

@@ -1,0 +1,8 @@
+#!/bin/bash
+#echo $1 $2 $3 $4 $5 >> /tmp/milog
+/usr/bin/maildrop $1 $2 $3 $4 $5
+ST=$?
+if [[ "$ST" == "77" || "$ST" == "75" ]]; then
+ exit 69
+fi
+ exit $ST

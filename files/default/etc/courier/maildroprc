@@ -1,0 +1,28 @@
+MAILDIR=$HOME/$DEFAULT
+`test -e $MAILDIR`
+if ( $RETURNCODE != 0 )
+{
+ `maildirmake $MAILDIR`
+  `chown -R vmail:vmail $MAILDIR`
+}
+
+
+###########################
+# filtro Spam forti       #
+###########################
+if( \
+   /^X-Spam-Flag:\s*Yes/:h \
+   || /^\*\*\*SPAM\*\*\*:/:h \
+)
+exception {
+   SPAMDIR=${DEFAULT}/.Spam
+   `test -e $SPAMDIR`
+   if ( $RETURNCODE != 0 )
+   {
+   `maildirmake $SPAMDIR`
+   `chown -R vmail:vmail $SPAMDIR`
+   }
+   to "${SPAMDIR}/"
+}
+
+
