@@ -245,7 +245,7 @@ TLS_CERTS=X509
 #
 # This is an experimental feature.
 
-TLS_CERTFILE=<%= "#{node[:postfix][:courier][:ssl][:cert_path]}/certs/#{node[:postfix][:courier][:ssl][:cert_file]}" %>
+TLS_CERTFILE=<%= @certificate %>
 
 ##NAME: TLS_TRUSTCERTS:0
 #

@@ -63,7 +63,7 @@ scache    unix  -       -       -       -       1       scache
 # Also specify in main.cf: maildrop_destination_recipient_limit=1
 #
 maildrop  unix  -       n       n       -       -       pipe
-  flags=<%=node.postfix.maildrop_mastercf_flags%> user=vmail argv=<%= node.postfix.maildrop_binary%> -d ${recipient}
+  flags=<%=node.postfix.maildrop_mastercf_flags%> user=vmail argv=<%= node.postfix.maildrop_binary%>
 #
 # ====================================================================
 #

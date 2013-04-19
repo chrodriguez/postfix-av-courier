@@ -14,14 +14,14 @@ See `attributes/default.rb` to understand
 ## Recipes
 * default: install postfix
 * sasl: enables sasl authentication. It will be called by default recipe if proper attributes are set
+* amavis: enables Amavis + Clamav + Spamassassin integration
+* courier: imap, imap-ssl, pop, pop-ssl, maildrop + postfix integration. Ldap authentication
 
 
 ## TODO
 
-**Implement:*a*
-* SSL support
+**Implement:**
 * Policyd recipe
-* Encrypted databags
 
 ## Author
 **Author:** Christian A. Rodriguez (<chrodriguez@gmail.com>)
