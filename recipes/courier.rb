@@ -42,11 +42,24 @@ service "courier-imap-ssl"
 service "courier-pop" 
 service "courier-pop-ssl" 
 
+ssl_certificate = "#{node[:postfix][:courier][:ssl][:cert_path]}/private/courier_formatted_certificate.pem"
+
+
 certificate_manage node[:postfix][:ssl][:databag_item] do
   cert_path node[:postfix][:courier][:ssl][:cert_path]
   cert_file node[:postfix][:courier][:ssl][:cert_file]
   key_file node[:postfix][:courier][:ssl][:key_file]
   chain_file node[:postfix][:courier][:ssl][:chain_file]
+end
+
+bash "concat_certificate_key" do
+  user "root"
+  code <<-EOS
+    cat #{node[:postfix][:courier][:ssl][:cert_path]}/certs/#{node[:postfix][:courier][:ssl][:cert_file]} #{node[:postfix][:courier][:ssl][:cert_path]}/private/#{node[:postfix][:courier][:ssl][:key_file]} > #{ssl_certificate}
+    chmod "0400" #{ssl_certificate}
+  EOS
+  notifies :restart, "service[courier-imap-ssl]"
+  notifies :restart, "service[courier-pop-ssl]"
 end
 
 template "/etc/courier/authdaemonrc" do
@@ -81,6 +94,9 @@ template "/etc/courier/imapd-ssl" do
   owner "root"
   group "root"
   mode "0644"
+  variables(
+    :certificate => ssl_certificate
+  )
   notifies :restart, "service[courier-imap-ssl]"
 end
 
@@ -97,6 +113,9 @@ template "/etc/courier/pop3d-ssl" do
   owner "root"
   group "root"
   mode "0644"
+  variables(
+    :certificate => ssl_certificate
+  )
   notifies :restart, "service[courier-pop-ssl]"
 end
 
