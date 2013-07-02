@@ -8,3 +8,7 @@ version          "0.0.1"
 
 depends 'certificate'
 depends 'clamav'
+depends "apt"
+depends "certificate"
+depends "clamav"
+depends "apt-proxy"
