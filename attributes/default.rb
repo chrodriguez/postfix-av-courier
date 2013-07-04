@@ -95,6 +95,7 @@ default[:postfix][:amavis][:final_banned_destiny] = "D_DISCARD"
 default[:postfix][:amavis][:final_spam_destiny] = "D_DISCARD"
 default[:postfix][:amavis][:final_bad_header_destiny] = "D_PASS"
 # Spamassassin amavis training
+default[:postfix][:sa_train][:enabled] = true
 default[:postfix][:sa_train][:mailboxes_base] = "/home"
 default[:postfix][:sa_train][:spam_imap_folder] = ""
 default[:postfix][:sa_train][:jam_imap_folder] = ""

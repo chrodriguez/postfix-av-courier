@@ -68,7 +68,16 @@ template "/usr/local/bin/sa-train" do
   )
 end
 
-cron "sa_train" do
-  minute "0"
-  command "/usr/local/bin/sa-train"
+if node[:postfix][:sa_train][:enabled] then
+  cron "sa_train" do
+    minute "0" 
+    command "/usr/local/bin/sa-train"
+    action :create
+  end 
+else
+  cron "sa_train" do
+    minute "0" 
+    command "/usr/local/bin/sa-train"
+    action :delete
+  end 
 end
