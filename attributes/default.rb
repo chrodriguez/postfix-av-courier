@@ -111,6 +111,17 @@ set[:clamav][:clamd][:enabled] = true
 set[:clamav][:clamd][:local_socket] = "/var/run/clamav/clamd.ctl"
 
 
+# spamassassin
+default[:postfix][:spamassassin][:enabled] = true
+default[:postfix][:spamassassin][:use_bayes] = 1
+default[:postfix][:spamassassin][:bayes_auto_learn] = 1
+default[:postfix][:spamassassin][:bayes_sql_override_username] = "amavis"
+default[:postfix][:spamassassin][:use_mysql] = false
+default[:postfix][:spamassassin][:db_name] = "spamassassin"
+default[:postfix][:spamassassin][:db_host] = "127.0.0.1"
+default[:postfix][:spamassassin][:db_username] = "root"
+default[:postfix][:spamassassin][:db_password] = ""
+
 # Courier 
 default[:postfix][:courier][:enabled] = false
 
@@ -163,4 +174,3 @@ default[:postfix][:courier][:ssl][:chain_file] = "chain.crt"
 default[:postfix][:maildrop_mastercf_flags] = "DRhu"
 default[:postfix][:maildrop_binary] = "/usr/bin/maildrop -d ${recipient}"
 default[:postfix][:maildrop_destination_recipient_limit] = false
-
