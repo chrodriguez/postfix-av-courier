@@ -17,7 +17,7 @@ Vagrant::Config.run do |config|
   # to skip installing and copying to Vagrant's shelf.
   # config.berkshelf.except = []
 
-  config.vm.host_name = "senasamail.senasa.gob.ar"
+  config.vm.host_name = "nahuel.biol.unlp.edu.ar"
 
   config.vm.box = "ubuntu-12.04-chef-11.4.0"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
@@ -53,14 +53,13 @@ Vagrant::Config.run do |config|
 #    chef.log_level = :debug
     chef.data_bags_path = "../../data_bags"
     chef.roles_path = "../../roles"
-    chef.encrypted_data_bag_secret_key_path = "../../.chef/databags.key"
+    chef.encrypted_data_bag_secret_key_path = "../../.chef/encrypted_data_bag_secret"
     chef.json = {
     }
 
     chef.run_list = [
       "apt",
-#     "role[mail_adam]"
-      "role[mail_directorio]"
+      "role[mail]"
     ]
   end
 end
